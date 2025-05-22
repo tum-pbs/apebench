@@ -226,7 +226,7 @@ rule of thumb is:
 
 ### `remove_singleton_axis`
 
-**Only avarible when directly executing a scenario** (i.e., not in the
+**Only available when directly executing a scenario** (i.e., not in the
 experimental or study interface). If `True` and `num_seeds=1`, the returned
 `neural_stepper_s`'s internal weight arrays will not have a leading singleton
 axis and they can directly operate on state arrays. If `False` or `num_seeds >
@@ -248,7 +248,7 @@ dimensions. Since the default is always `1`, this argument must be set for these
 
 !!! warning
 
-    With increasing spatial dimension scenarios become more challenging, not just in terms of how hard it is for the emulator obtain good results, but also in terms of the scenario's memory footprint and compute cost. Keep in mind, that the number of total degrees of freedom scale exponentially via $\propto N^D$.
+    With increasing spatial dimension, scenarios become more challenging, not just in terms of how hard it is for the emulator obtain good results, but also in terms of the scenario's memory footprint and compute cost. Keep in mind, that the number of total degrees of freedom scale exponentially via $\propto N^D$.
 
 ### `num_points`
 
@@ -268,11 +268,11 @@ Fourier pseudo-spectral solver underlying APEBench) for more details.
 
 !!! warning
 
-   Except for the most recent generation of hardware, running `num_points=160`
-   with `num_spatial_dims=3` under otherwise default settings is intractable
-   ($160^3 \approx 4 \times 10^6$ degrees of freedom per channel). The [APEBench
-   paper](https://arxiv.org/abs/2411.00180) resorted to `num_points=32` for its
-   3D runs on 12GB RTX 2080 Ti GPUs.
+    Except for the most recent generation of hardware, running `num_points=160`
+    with `num_spatial_dims=3` under otherwise default settings is intractable
+    ($160^3 \approx 4 \times 10^6$ degrees of freedom per channel). The [APEBench
+    paper](https://arxiv.org/abs/2411.00180) resorted to `num_points=32` for its
+    3D runs on 12GB RTX 2080 Ti GPUs.
 
 ### `num_channels`
 
@@ -283,7 +283,7 @@ equation always has one channel indepent of the
 [`num_spatial_dims`](#num_spatial_dims) whereas for the Burgers scenarios, the
 number of channels is equal to the number of spatial dimensions
 
-This is not an argument which is supposed to be modified.
+**This is not an argument which is supposed to be modified.**
 
 !!! info
 
@@ -291,19 +291,114 @@ This is not an argument which is supposed to be modified.
 
 !!! info
 
-    By default, the distribution of initial conditions (as described by [`ic_config`](#ic_config)) is the same for all channels (of course the concrete randome variates are drawn with effectively different seeds).
+    By default, the distribution of initial conditions (as described by [`ic_config`](#ic_config)) is the same for all channels (of course the concrete random variates are drawn with effectively different seeds). Although, some problems like [reaction-diffusion](api/scenarios/physical/react.md) have different distributions for different channels.
 
 ### `ic_config`
 
+Typical default: `fourier;5;true;true`
+
+A string describing a (continous) distribution of initial conditions. Must be
+one of the keys of [`apebench.components.ic_dict`][]. Currently supported are:
+
+- `"fourier;K;HAS_OFFSET;MAX_ONE"`: (builds upon
+  [this](https://fkoehler.site/exponax/api/utilities/initial_conditions/truncated_fourier_series/)
+  distribution in Exponax) a state which has Fourier modes up to (including) `K`
+  being active (in the 1D case, this means that the Fourier modes are `1, ...,
+  K`). The amplitude and angle weights of the Fourier modes are drawn from
+  random normal distributions with mean `0` and standard deviation `1`. If
+  `HAS_OFFSET` is `True`, there is an additional non-zero weight in the
+  mean/zero-mode which is drawn uniformly from `[-0.5, 0.5]`. If `MAX_ONE` is
+  `True`, the maximum absolute value of the IC in state space is limited to `1`
+  (recommended to keep `True`). In higher dimensions, Fourier modes within the
+  `[1, K]^D` "cube" are active.
+- `"diffused;INTENSITY;ZERO_MEAN;MAX_ONE"`: (builds upon
+  [this](https://fkoehler.site/exponax/api/utilities/initial_conditions/diffused_noise/)
+  distribution in Exponax) a state which has Fourier modes with an exponentially
+  quadratically decaying amplitude. The amplitude of the Fourier modes is drawn
+  from a normal distribution with mean `0` and standard deviation `1`. The
+  intensity adjusts the slope of the exponentially quadratic decay. If
+  `ZERO_MEAN` is `True`, the mean/zero-mode is set to zero. If `MAX_ONE` is
+  `True`, the maximum absolute value of the IC in state space is limited to `1`
+  (recommended to keep `True`).
+- `"grf;POWERLAW_EXPONENT;ZERO_MEAN;MAX_ONE"`: (builds upon
+  [this](https://fkoehler.site/exponax/api/utilities/initial_conditions/gaussian_random_field/)
+  distribution in Exponax) a state which has Fourier modes with a polynomially
+  decaying amplitude.
+
+
+General advice:
+
+- Use the `"fourier"` distribution for a hard cutoff of the Fourier modes
+- Use the `"diffused"` distribution for an exponentially quadratic decay of the
+  Fourier modes
+- Use the `"grf"` distribution for polynomially decaying Fourier modes
+
+See [`apebench.BaseScenario.get_ic_generator`][] for further options.
+
+!!! note
+
+    Scenarios can can become more challenging depending on the spectrum of the initial condition. Typically, emulators perform better for smoother problems (i.e., problems with only a few modes active or a strong decay). Keep in mind, that all linear PDEs (on periodic BCs and with bandlimited initial conditions) do not mix modes over the trajectory. As such the composition of active modes does not change (they could only reduce in magnitude if there is a diffusive component). On the other hand, nonlinear PDEs do mix modes over the trajectory. As such, even a very smooth initial condition might turn into a non-smooth one later on.
+
+!!! note
+
+    For chaotic problems and forced problems, the initial conditions are typically less important since the long-term dynamics are dominated by the forcing or the chaotic nature of the problem. The chaotic problems of APEBench are typically run for [`num_warmup_steps`](#num_warmup_steps) steps before training and test data is recorded. However, an adverse initial condition might extend the duration of the burn-in phase.
+
+!!! note
+
+    Some scenarios (in particular the nonlinear ones) become more difficult when the initial conditions have large magnitudes. Neural emulators can also be sensitive to input states not being neatly distributed around a magnitude of one.
+
 ### `num_warmup_steps`
+
+Typical default: `0` (is overwritten by the chaotic scenarios)
+
+The number of steps the reference simulator (the one created by
+[`apebench.BaseScenario.get_ref_stepper`][]) is run before the training and test
+trajectories are recorded. For chaotic problems, this is set to a nonzero value
+(typically `500`) to skip the burn-in phase and test emulators for predicting
+within the chaotic manifold. Set this to `0` to test emulators during the
+transient phase. For non-chaotic problems, a nonzero value could be used to
+train or test emulators within a specific regime of the dynamics, e.g., to
+assess emulators within the shock propagation phase of the
+[`apebench.scenarios.difficulty.Burgers`][] scenario.
 
 ### `num_train_samples`
 
+Typical default: `50`
+
+How many initial conditions to draw from the IC distribution.
+
 ### `train_temporal_horizon`
+
+Typical default: `50`
+
+The number of time steps produced by the reference simulator (the one created by
+[`apebench.BaseScenario.get_ref_stepper`][]) for each initial condition.
+
+!!! tip
+
+    The returned shape of the training obtained by [`apebench.BaseScenario.get_train_data`][] is
+    ([num_train_samples](#num_train_samples), [train_temporal_horizon](#train_temporal_horizon), [num_channels](#num_channels), *(([num_points](#num_points),) * [num_spatial_dims](#num_spatial_dims))).
+
+!!! tip
+
+    The number of samples within the training trajectories depends on the [`num_training_samples`]
 
 ### `train_seed`
 
+Typical default: `0`
+
+The value used to create a `jax.random.key` used to draw the initial conditions.
+Using the same key deterministically draws the same initial conditions.
+
+!!! tip
+
+    When conducting seed studies, variation of the training set can be interesting to investigate. However, the larger the training set (i.e., the more [num_train_samples](#num_train_samples) or the longer [train_temporal_horizon](#train_temporal_horizon)), the less important the variation of the training set becomes.
+
 ### `num_test_samples`
+
+Typical default: `30`
+
+
 
 ### `test_temporal_horizon`
 
