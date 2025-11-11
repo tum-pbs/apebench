@@ -76,11 +76,11 @@ class AdvectionDiffusion(Linear):
 
 
 class Dispersion(Linear):
-    dipersion_coef: float = 0.00025
+    dispersion_coef: float = 0.00025
     dt: float = 0.001  # Overwrite
 
     def __post_init__(self):
-        self.a_coefs = (0.0, 0.0, 0.0, self.dipersion_coef, 0.0)
+        self.a_coefs = (0.0, 0.0, 0.0, self.dispersion_coef, 0.0)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_phy_disp"
