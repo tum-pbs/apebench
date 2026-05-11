@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use APEBench in your research, please cite the NeurIPS 2024 paper below."
+title: "APEBench: A Benchmark for Autoregressive Neural Emulators of PDEs"
+type: software
+authors:
+  - given-names: Felix
+    family-names: Koehler
+    affiliation: "Technical University of Munich"
+  - given-names: Simon
+    family-names: Niedermayr
+    affiliation: "Technical University of Munich"
+  - given-names: Rüdiger
+    family-names: Westermann
+    affiliation: "Technical University of Munich"
+  - given-names: Nils
+    family-names: Thuerey
+    affiliation: "Technical University of Munich"
+repository-code: "https://github.com/tum-pbs/apebench"
+url: "https://tum-pbs.github.io/apebench-paper/"
+license: MIT
+keywords:
+  - "partial differential equations"
+  - "neural emulators"
+  - "autoregressive models"
+  - "benchmark"
+  - "differentiable physics"
+  - "JAX"
+  - "scientific machine learning"
+preferred-citation:
+  type: conference-paper
+  title: "APEBench: A Benchmark for Autoregressive Neural Emulators of PDEs"
+  authors:
+    - given-names: Felix
+      family-names: Koehler
+      affiliation: "Technical University of Munich"
+    - given-names: Simon
+      family-names: Niedermayr
+      affiliation: "Technical University of Munich"
+    - given-names: Rüdiger
+      family-names: Westermann
+      affiliation: "Technical University of Munich"
+    - given-names: Nils
+      family-names: Thuerey
+      affiliation: "Technical University of Munich"
+  collection-title: "Advances in Neural Information Processing Systems 38 (NeurIPS 2024) Track on Datasets and Benchmarks"
+  conference:
+    name: "Thirty-eighth Conference on Neural Information Processing Systems"
+  year: 2024
+  url: "https://proceedings.neurips.cc/paper_files/paper/2024/hash/d9875ebcf74bccdc5076acab0dbee62c-Abstract-Datasets_and_Benchmarks_Track.html"
+  identifiers:
+    - type: other
+      value: "arXiv:2411.00180"
+      description: "arXiv preprint"
