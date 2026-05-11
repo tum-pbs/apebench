@@ -198,10 +198,11 @@ it:
 
 ```bibtex
 @article{koehler2024apebench,
-  title={{APEBench}: A Benchmark for Autoregressive Neural Emulators of {PDE}s},
-  author={Felix Koehler and Simon Niedermayr and R{\"}udiger Westermann and Nils Thuerey},
-  journal={Advances in Neural Information Processing Systems (NeurIPS)},
-  volume={38},
+  title={{APEBench}: A benchmark for autoregressive neural emulators of pdes},
+  author={Koehler, Felix and Niedermayr, Simon and Westermann, R{\"u}diger and Thuerey, Nils},
+  journal={Advances in Neural Information Processing Systems},
+  volume={37},
+  pages={120252--120310},
   year={2024}
 }
 ```
