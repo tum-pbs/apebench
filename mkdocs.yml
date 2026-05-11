@@ -99,7 +99,13 @@ nav:
             - Benchmark Flax linen models: 'examples/benchmark_flax_models_with_linen.ipynb'
             - Benchmark PyTorch models: 'examples/benchmark_pytorch_models.ipynb'
             - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
-            - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
+        - Studies:
+            - Overview: 'studies/overview.md'
+            - Unrolled Training for high Difficulty: 'studies/unrolled_training_for_high_difficulty.ipynb'
+            - Performance across Metrics: 'studies/performance_across_metrics.ipynb'
+            - FNO & Active Modes: 'studies/fno_and_active_modes.ipynb'
+            - Difficulty & Receptive Field in 1D Advection: 'studies/difficulty_and_receptive_field_advection_1d.ipynb'
+            - Difficulty & Receptive Field in 1D Diffusion: 'studies/difficulty_and_receptive_field_diffusion_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'
