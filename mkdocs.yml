@@ -11,7 +11,6 @@ theme:
     name: material
     features:
         - navigation.sections  # Sections are included in the navigation on the left.
-        - toc.integrate  # Table of contents is integrated on the left; does not appear separately on the right.
         - header.autohide  # header disappears as you scroll
     palette:
         - scheme: default
@@ -88,6 +87,7 @@ nav:
     - 'use_cases.md'
     - 'extending_apebench.md'
     - 'using_cli.md'
+    - 'arguments.md'
     - Examples:
         - Introductory:
             - Simple Advection 1D Emulation: 'examples/simple_advection_1d_learning.ipynb'
@@ -132,6 +132,12 @@ nav:
         - Scrape:
             - Utilities: 'api/scrape/utilities.md'
             - Curations: 'api/scrape/curations.md'
+        - Components:
+            - 'api/components/architectures.md'
+            - 'api/components/initial_condition.md'
+            - 'api/components/activation_function.md'
+            - 'api/components/metrics.md'
+            - 'api/components/optimization.md'
         - 'api/utils.md'
     - Misc:
         - FAQ: 'misc/faq.md'
