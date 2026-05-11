@@ -99,6 +99,7 @@ nav:
             - Benchmark Flax linen models: 'examples/benchmark_flax_models_with_linen.ipynb'
             - Benchmark PyTorch models: 'examples/benchmark_pytorch_models.ipynb'
             - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
+            - Statistical Analysis: 'examples/statistical_analysis.ipynb'
             - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
