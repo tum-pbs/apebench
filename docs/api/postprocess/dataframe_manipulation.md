@@ -12,4 +12,12 @@
 
 ---
 
+::: apebench.cumulative_aggregation
+
+---
+
 ::: apebench.relative_by_config
+
+---
+
+::: apebench.compute_pvalues_against_best
